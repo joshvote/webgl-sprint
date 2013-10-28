@@ -15,4 +15,12 @@
             </list>
         </property>
     </bean>
+    
+    <bean class="org.auscope.portal.core.services.methodmakers.WFSGetFeatureMethodMaker"></bean>
+    
+    <bean id="httpServiceCaller" class="org.auscope.portal.core.server.http.HttpServiceCaller">
+        <constructor-arg type="int" name="connectionTimeOut">
+            <value>900000</value>
+        </constructor-arg>
+    </bean>
 </beans>
