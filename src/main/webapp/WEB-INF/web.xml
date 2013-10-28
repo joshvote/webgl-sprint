@@ -13,7 +13,7 @@
     <context-param>
         <param-name>contextClass</param-name>
         <param-value>
-            org.auscope.portal.server.WebAppContext
+            au.csiro.portal.server.WebAppContext
         </param-value>
     </context-param>
 
