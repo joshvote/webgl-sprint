@@ -1,0 +1,22 @@
+Manifest-Version: 1.0
+Implementation-Title: Web GL Sprint
+javaVendor: Sun Microsystems Inc.
+Implementation-Version: 0.0.0-SNAPSHOT
+javaVmVersion: 16.0-b13
+javaVersion: 1.6.0_18
+Built-By: vot002
+Specification-Vendor: CSIRO
+projectName: Web GL Sprint
+Created-By: Apache Maven 3.0.5
+buildDate: 28-10-2013 10:52
+osVersion: 6.1
+version: 0.0.0-SNAPSHOT
+osName: Windows 7
+Implementation-Vendor: CSIRO
+Implementation-Vendor-Id: au.csiro
+Build-Jdk: 1.6.0_18
+Specification-Title: Web GL Sprint
+javaVmVendor: Sun Microsystems Inc.
+Specification-Version: 0.0.0-SNAPSHOT
+Implementation-Build: d72cf018a85604d2ed98f54e2cd721f5f08be87a
+
