@@ -1,4 +1,4 @@
-package org.auscope.portal.server;
+package au.csiro.portal.server;
 
 import java.util.Arrays;
 
