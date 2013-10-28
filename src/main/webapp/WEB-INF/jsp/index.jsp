@@ -26,8 +26,7 @@
               Ext.Ajax.request({
            	      url : 'getBoreholes.do',
            	      params : {
-           	          maxFeatures : 1,
-           	          boreholeId : 'borehole.123'
+           	          maxFeatures : 2
            	      },
            	      callback : function(options, success, response) {
            	          if (!success) {
