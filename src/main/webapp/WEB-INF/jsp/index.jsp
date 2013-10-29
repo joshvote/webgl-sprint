@@ -25,7 +25,8 @@
               Ext.Ajax.request({
                   url: 'getBoreholes.do',
                   params: {
-           	          maxFeatures : 2
+           	          maxFeatures : 1000,
+           	       	  //featureId : 'boreholes.5271'
                   },
                   callback: function (options, success, response) {
                       if (!success) {
@@ -52,7 +53,7 @@
                               yaw: 40,
                               pitch: -20,
                               zoom: 10,
-                              zoomSensitivity: 10.0,
+                              zoomSensitivity: 1,
                               eye: {
                                   x: 0,
                                   y: 0,
@@ -66,45 +67,53 @@
                               nodes: [{
                                   type: "material",
                                   color: {
-                                      r: 0.5,
-                                      g: 0.5,
-                                      b: 0.5
+                                      r: 1.0,
+                                      g: 0.0,
+                                      b: 0.0
                                   },
-                                  nodes: [{
+                                  nodes: [/*{
                                       type: "geometry",
-                                      source: {
-                                          type: "sphere",
-                                          latitudeBands: 30,
-                                          longitudeBands: 30,
-                                          radius: 1
-                                      }
-                                  }]
+                                      primitive : "line-strip",
+                                      positions : [0,0,0,
+                                                   1,1,1,
+                                                   -1,2,3],
+                                      indices: [0,1,2]
+                                  }*/]
                               }]
                           }]
                       };
 
                       for (i = 0; i < responseJsonObject.data.length; ++i) {
-                          var posarray = new Array();
+                          var posarray = [];
+                          var indicesArray = [];
+                          
+                          var xm = 500;
+                          var ym = 998;
+                          var zm = 15.5;
+                          
                           for (j = 0; j < responseJsonObject.data[i].points.length; ++j) {
                               var point = responseJsonObject.data[i].points[j];
-                              posarray.push(point.x);
-                              posarray.push(point.y);
-                              posarray.push(point.z);
-                              console.log("added a point with coordinate (" + point.x + "," + point.y + "," + point.z + ")");
+                              var point2 = responseJsonObject.data[i].points[j+1];
+                              var divisor = 100;
+                              posarray.push(point.x / divisor - xm);
+                              posarray.push(point.y / divisor - ym);
+                              posarray.push(point.z / divisor - zm);
+                              indicesArray.push(j);
+                              console.log("added a point with coordinate (" + point.x/ divisor + "," + point.y/ divisor + "," + point.z/ divisor + ")");
                           }
 
                           configScene.nodes[0].nodes.push({
                               type: "material",
                               color: {
-                                  r: 0.0,
+                                  r: 1.0,
                                   g: 0.0,
-                                  b: 1.0
+                                  b: 0.0
                               },
                               nodes: [{
                                   type: "geometry",
-                                  primitive: "lines",
-                                  positions: posarray,
-                                  indices: [0, 1]
+                                  primitive : "line-strip",
+                                  positions : posarray,
+                                  indices: indicesArray
                               }]
                           });
 
