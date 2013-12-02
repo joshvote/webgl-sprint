@@ -6,13 +6,19 @@
     <head>
         <title>webgl-sprint</title>
         <meta charset="utf-8">
-        <script src="http://scenejs.org/api/latest/scenejs.js"></script>
 
       <!-- link extjs 4 -->
       <link rel="stylesheet" type="text/css" href="js/ext-4.1.1a/resources/css/ext-all.css">
       <script type="text/javascript" src="js/ext-4.1.1a/ext-all.js"></script>
       
+      <!-- Link three.js -->
+      <script type="text/javascript" src="js/threejs/three.min.js"></script>
+      <script type="text/javascript" src="js/threejs/controls/FlyControls.js"></script>
+      
+      <script type="text/javascript" src="js/threejs/Stats.js"></script>
+      
       <script type="text/javascript">
+      
       Ext.application({
           name : 'portal',
 
@@ -21,71 +27,53 @@
           //monolithic 'do everything' function
           launch : function() {
 
+              var stats = new Stats();
+              stats.setMode(0); // 0: fps, 1: ms
+
+              // Align top-left
+              stats.domElement.style.position = 'absolute';
+              stats.domElement.style.right = '0px';
+              stats.domElement.style.top = '0px';
+
+              document.body.appendChild( stats.domElement );
+              
               //This is the actual function request to the backend. The rest is just ExtJS boilerplate.
               Ext.Ajax.request({
                   url: 'getBoreholes.do',
                   params: {
-           	          maxFeatures : 1000,
+           	          maxFeatures : 1000//,
            	       	  //featureId : 'boreholes.5271'
                   },
                   callback: function (options, success, response) {
                       if (!success) {
-                          console.log('couldnt hit backend');
+                          alert('Couldnt hit backend');
                           return;
                       }
 
                       var responseJsonObject = Ext.JSON.decode(response.responseText);
 
                       if (!responseJsonObject.success) {
-                          console.log("unsuccesful data retrieval.");
+                          alert("Unsuccesful data retrieval.");
                           return;
                       }
+                      
+                      Ext.get('loading-text').remove();
+                      
+                      alert('Rendering ' + responseJsonObject.data.length + ' boreholes now.\nTo look around, hold down the mouse and drag. To move the camera, use WASD');
 
-                      console.log("succesful data retrieval.");
-
-                      //make scene configuration with globe
-                      var configScene = {
-                          canvasId: "webgl-sprint",
-                          id: "scene",
-                          nodes: [{
-                              type: "cameras/orbit",
-                              id: "camera",
-                              yaw: 40,
-                              pitch: -20,
-                              zoom: 10,
-                              zoomSensitivity: 1,
-                              eye: {
-                                  x: 0,
-                                  y: 0,
-                                  z: 10
-                              },
-                              look: {
-                                  x: 0,
-                                  y: 0,
-                                  z: 0
-                              },
-                              nodes: [{
-                                  type: "material",
-                                  color: {
-                                      r: 1.0,
-                                      g: 0.0,
-                                      b: 0.0
-                                  },
-                                  nodes: [/*{
-                                      type: "geometry",
-                                      primitive : "line-strip",
-                                      positions : [0,0,0,
-                                                   1,1,1,
-                                                   -1,2,3],
-                                      indices: [0,1,2]
-                                  }*/]
-                              }]
-                          }]
-                      };
-
+                      var canvasEl = Ext.get('webgl-sprint-canvas').dom;
+                      canvasEl.width = window.innerWidth;
+                      canvasEl.height = window.innerHeight;
+                      
+                      var scene = new THREE.Scene();
+                      var camera = new THREE.PerspectiveCamera(75, canvasEl.width / canvasEl.height, 0.1, 10000);
+                      var renderer = new THREE.WebGLRenderer({
+                          canvas : Ext.get('webgl-sprint-canvas').dom
+                      });
+                      
+                      
                       for (i = 0; i < responseJsonObject.data.length; ++i) {
-                          var posarray = [];
-                          var indicesArray = [];
+                          var points = [];
                           
                           var xm = 500;
                           var ym = 998;
@@ -93,39 +81,54 @@
                           
                           for (j = 0; j < responseJsonObject.data[i].points.length; ++j) {
                               var point = responseJsonObject.data[i].points[j];
-                              var point2 = responseJsonObject.data[i].points[j+1];
                               var divisor = 100;
-                              posarray.push(point.x / divisor - xm);
-                              posarray.push(point.y / divisor - ym);
-                              posarray.push(point.z / divisor - zm);
-                              indicesArray.push(j);
-                              console.log("added a point with coordinate (" + point.x/ divisor + "," + point.y/ divisor + "," + point.z/ divisor + ")");
+                              points.push(new THREE.Vector3(point.x / divisor - xm, point.y / divisor - ym, point.z / divisor - zm));
                           }
 
-                          configScene.nodes[0].nodes.push({
-                              type: "material",
-                              color: {
-                                  r: 1.0,
-                                  g: 0.0,
-                                  b: 0.0
-                              },
-                              nodes: [{
-                                  type: "geometry",
-                                  primitive : "line-strip",
-                                  positions : posarray,
-                                  indices: indicesArray
-                              }]
-                          });
-
-                          console.log("created borehole with lat/long = " + responseJsonObject.data[i].latitude + "/" + responseJsonObject.data[i].longitude + " and positions " + posarray);
-
+                          //The tube geometry will divide the points up into a set of n segments
+                          //with a specified number of points on the radius. 
+                          var segments = Math.ceil(Math.log(points.length) / Math.LN2); //lets decimate according to an arbitrary scale
+                          var radius = 5;
+                          var thickness = 0.1; //This doesn't increase/decrease polygons. Just their scale
+                          
+                          var path = new THREE.SplineCurve3(points);
+                          var geometry = new THREE.TubeGeometry(path, segments, 0.1, radius, false);
+                          var material = new THREE.MeshBasicMaterial( { color: Math.floor(Math.random()*16777215), wireframe: true} );
+                          material.side = THREE.FrontSide;
+                          var tube = new THREE.Mesh(geometry, material);
+                          scene.add(tube);
                       }
+                      
+                      camera.position.z = 50;
+                      
+                      var controls = new THREE.FlyControls( camera );
+                      controls.movementSpeed = 0.1;
+                      controls.domElement = Ext.get('viewport').dom;
+                      controls.rollSpeed = 0.01;
+                      controls.autoForward = false;
+                      controls.dragToLook = true;
+                      
+                      
+                      var update = function() {
+                          requestAnimationFrame( update );
+                          
+                          stats.begin();
 
-                      //make scene
-                      SceneJS.setConfigs({
-                          pluginPath: "http://scenejs.org/api/latest/plugins"
-                      });
-                      SceneJS.createScene(configScene);
+                          controls.update(1);
+                          renderer.render(scene, camera);
+                          
+                          stats.end();
+                      };
+                      
+                      update();
+                      
+                      window.addEventListener( 'resize', onWindowResize, false );
+
+                      function onWindowResize( event ) {
+                          camera.aspect = window.innerWidth / window.innerHeight;
+                          renderer.setSize( window.innerWidth, window.innerHeight );
+                          renderer.render( scene, camera );
+                      }
                   }
               });
           }
@@ -135,8 +138,10 @@
    </head>
 
     <body>
-        <p>Hello World!</p>
-        <canvas id="webgl-sprint" width="512px" height="512px"></canvas>
+    	<p id="loading-text">Requesting boreholes from remote service. Please be patient.</p>
+        <div id="viewport" style="width: 100%; height: 100%">
+        	<canvas id="webgl-sprint-canvas"></canvas>
+        </div>
     </body>
 
 </html>
