@@ -7,6 +7,7 @@ public class Borehole {
     private String nvclFeatureUri;
     private String nvclName;
     private String nvclId;
+    private String nvclDataUrl;
     
     
     public Borehole(String name, Double totalDepth, Point3D[] points) {
@@ -51,7 +52,14 @@ public class Borehole {
     public void setNvclId(String nvclId) {
         this.nvclId = nvclId;
     }
+    public String getNvclDataUrl() {
+        return nvclDataUrl;
+    }
+    public void setNvclDataUrl(String nvclDataUrl) {
+        this.nvclDataUrl = nvclDataUrl;
+    }
 
+    
     
     
 }
