@@ -60,7 +60,7 @@ Ext.define('webglsprint.Main', {
 
             var material = new THREE.MeshLambertMaterial({
             	needsUpdate: true,
-                map: THREE.ImageUtils.loadTexture('img/example-texture-long.png')
+                map: THREE.ImageUtils.loadTexture('getBoreholesImage.do?logId=fae8f90d-2015-4200-908a-b30da787f01&depth=20')
               });
 
 

@@ -1,5 +1,7 @@
 package au.csiro.portal.services;
 
+import java.awt.image.IndexColorModel;
+import java.awt.image.RenderedImage;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
@@ -10,7 +12,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.Vector;
 
+import javax.media.jai.LookupTableJAI;
+import javax.media.jai.RenderedOp;
+import javax.media.jai.operator.FileLoadDescriptor;
+import javax.media.jai.operator.LookupDescriptor;
+import javax.media.jai.operator.MosaicDescriptor;
+import javax.media.jai.operator.TranslateDescriptor;
 import javax.xml.namespace.NamespaceContext;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
@@ -120,33 +129,28 @@ public class Borehole3DService extends BaseWFSService {
         }
     }
 
-    public InputStream getImageStream(String boreholeId) throws Exception{
-
+    public byte[] getImageStream(String boreholeId, String sampleNo) throws Exception{
     	 HttpGet method = new HttpGet();
          URIBuilder builder = new URIBuilder("http://nvclwebservices.vm.csiro.au/NVCLDataServices/Display_Tray_Thumb.html");
          builder.setParameter("logid", boreholeId); //The access token I am getting after the Login
-         builder.setParameter("sampleno", "1");
+         builder.setParameter("sampleno", sampleNo);
          method.setURI(builder.build());
-         return this.httpServiceCaller.getMethodResponseAsStream(method);
-
+         return this.httpServiceCaller.getMethodResponseAsBytes(method);
     }
 
 
-    public File getImageFile(String boreholeId) throws Exception{
-
-   	 HttpGet method = new HttpGet();
+    public File getImageFile(String boreholeId, String sampleNo) throws Exception{
+   	    HttpGet method = new HttpGet();
         URIBuilder builder = new URIBuilder("http://nvclwebservices.vm.csiro.au/NVCLDataServices/Display_Tray_Thumb.html");
         builder.setParameter("logid", boreholeId); //The access token I am getting after the Login
-        builder.setParameter("sampleno", "1");
+        builder.setParameter("sampleno", sampleNo);
         method.setURI(builder.build());
         InputStream in = this.httpServiceCaller.getMethodResponseAsStream(method);
-        File file = File.createTempFile("sprint", "png");
+        File file = File.createTempFile("sprint_", "png");
         FileOutputStream out = new FileOutputStream(file);
         IOUtils.copy(in,out);
-
         out.flush();
-
         return file;
-
    }
+    
 }
