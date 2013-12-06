@@ -26,7 +26,10 @@ Ext.define('webglsprint.Main', {
             }
 
             Ext.get('loading-text').remove();
-            alert('Rendering ' + boreholes.length + ' boreholes now.\nTo look around, hold down the mouse and drag. To move the camera, use WASD');
+            alert('Rendering ' + boreholes.length + ' boreholes now.'
+                    + '\nTo look around, hold down the mouse and drag.'
+                    + '\nTo move the camera, use the WASD keys.'
+                    + '\nTo query a borehole, use mouse right-click.');
             if (!boreholes.length) {
                 return;
             }
