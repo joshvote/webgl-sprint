@@ -15,6 +15,7 @@ import javax.media.jai.RenderedOp;
 import javax.media.jai.operator.JPEGDescriptor;
 import javax.media.jai.operator.LookupDescriptor;
 import javax.media.jai.operator.MosaicDescriptor;
+import javax.media.jai.operator.RotateDescriptor;
 import javax.media.jai.operator.ScaleDescriptor;
 import javax.media.jai.operator.TranslateDescriptor;
 import javax.servlet.http.HttpServletResponse;
@@ -46,6 +47,7 @@ public class ImageController extends BasePortalController {
     @RequestMapping("getBoreholesImage.do")
     public void getBoreholesImage(
     		@RequestParam(required=true,value="logId") String logId,
+    		@RequestParam(required=true,value="serviceUrl") String serviceUrl,
             @RequestParam(required=true,value="depth") int depth,
             HttpServletResponse response) {
     	
@@ -57,9 +59,11 @@ public class ImageController extends BasePortalController {
         	System.out.println("logId=" + logId + ",depth=" + depth);
         	
         	for (int i=0; i<depth; i++) {
-        		byte[] b = service.getImageStream(logId, String.valueOf(i));
+        		byte[] b = service.getImageStream(serviceUrl, logId, String.valueOf(i));
         		ByteArraySeekableStream bas = new ByteArraySeekableStream(b);
         		op = JPEGDescriptor.create(bas, null);
+        		
+        		op = RotateDescriptor.create(op, 0F, 0F, (float) -(Math.PI / 2), Interpolation.getInstance(Interpolation.INTERP_BICUBIC), null, null);
         		
         		if (i == 0){
                     width = op.getWidth();
@@ -67,10 +71,11 @@ public class ImageController extends BasePortalController {
                 } else {
                     // TRANSLATE
                     // Translate source images to correct places in the mosaic.
-                    op = TranslateDescriptor.create(op,(float)(width * 0),(float)(height * i),null,null);
+                    op = TranslateDescriptor.create(op,(float)(width * i),(float)(height * 0),null,null);
                 }
         		
         		op = ScaleDescriptor.create(op, 0.25F, 0.25F, 0F, 0F, Interpolation.getInstance(Interpolation.INTERP_BICUBIC), null);
+        		
         		
         		renderedOps.add(convert(op));
         	}

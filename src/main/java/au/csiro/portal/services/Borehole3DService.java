@@ -63,32 +63,41 @@ public class Borehole3DService extends BaseWFSService {
         fakeNvclData = new ArrayList<Map<String,String>>();
         
         HashMap<String, String> map = new HashMap<String, String>();
-        map.put("id", "870d1927-e33c-4a2f-aef7-556c6fd0a8c");
-        map.put("wfsUri", "http://nvclwebservices.vm.csiro.au/resource/feature/CSIRO/borehole/GDDH7");
-        map.put("name", "GDDH7");
-        map.put("dataserviceUrl", "http://nvclwebservices.vm.csiro.au/NVCLDataServices/");
+        map.put("id", "3e2f3fd5-f1c6-464f-9d18-8e0c14be0d6");
+        map.put("wfsUri", "http://geossdi.dmp.wa.gov.au/resource/feature/gswa/borehole/rdh01");
+        map.put("name", "rdh01");
+        map.put("dataserviceUrl", "http://geossdi.dmp.wa.gov.au/NVCLDataServices/");
         fakeNvclData.add(map);
         
         map = new HashMap<String, String>();
-        map.put("id", "6dd70215-fe38-457c-be42-3b165fd98c7");
+        map.put("id", "c0a0f7ff-91d7-4ecc-a5dd-6d950ad1f51");
+        map.put("wfsUri", "http://geossdi.dmp.wa.gov.au/resource/feature/gswa/borehole/msd9");
+        map.put("name", "msd9");
+        map.put("dataserviceUrl", "http://geossdi.dmp.wa.gov.au/NVCLDataServices/");
+        fakeNvclData.add(map);
+        
+        map = new HashMap<String, String>();
+        map.put("id", "b2c6845f-9286-4fff-a16c-e6031779bc9");
+        map.put("wfsUri", "http://geossdi.dmp.wa.gov.au/resource/feature/gswa/borehole/GSWADonnybrookDNB4");
+        map.put("name", "GSWADonnybrookDNB4");
+        map.put("dataserviceUrl", "http://geossdi.dmp.wa.gov.au/NVCLDataServices/");
+        fakeNvclData.add(map);
+        
+        map = new HashMap<String, String>();
+        map.put("id", "7ec27575-c3fa-4ccf-873a-0641a6cd275");
+        map.put("wfsUri", "http://geossdi.dmp.wa.gov.au/resource/feature/gswa/borehole/DX00");
+        map.put("name", "dx00");
+        map.put("dataserviceUrl", "http://geossdi.dmp.wa.gov.au/NVCLDataServices/");
+        fakeNvclData.add(map);
+        
+        map = new HashMap<String, String>();
+        map.put("id", "fae8f90d-2015-4200-908a-b30da787f01");
         map.put("wfsUri", "http://nvclwebservices.vm.csiro.au/resource/feature/CSIRO/borehole/WTB5");
         map.put("name", "WTB5");
         map.put("dataserviceUrl", "http://nvclwebservices.vm.csiro.au/NVCLDataServices/");
         fakeNvclData.add(map);
         
-        map = new HashMap<String, String>();
-        map.put("id", "820faa0e-acda-42c1-8f1c-b18c13cd38c");
-        map.put("wfsUri", "http://nvclwebservices.vm.csiro.au/resource/feature/CSIRO/borehole/GSDD006");
-        map.put("name", "GSDD006");
-        map.put("dataserviceUrl", "http://nvclwebservices.vm.csiro.au/NVCLDataServices/");
-        fakeNvclData.add(map);
         
-        map = new HashMap<String, String>();
-        map.put("id", "218410be-7dba-4cce-bb71-b3fea7fe581");
-        map.put("wfsUri", "http://nvclwebservices.vm.csiro.au/resource/feature/CSIRO/borehole/evil beu162");
-        map.put("name", "evil beu162");
-        map.put("dataserviceUrl", "http://nvclwebservices.vm.csiro.au/NVCLDataServices/");
-        fakeNvclData.add(map);
     }
     
     
@@ -145,9 +154,9 @@ public class Borehole3DService extends BaseWFSService {
         }
     }
 
-    public byte[] getImageStream(String boreholeId, String sampleNo) throws Exception{
+    public byte[] getImageStream(String serviceUrl, String boreholeId, String sampleNo) throws Exception{
     	 HttpGet method = new HttpGet();
-         URIBuilder builder = new URIBuilder("http://nvclwebservices.vm.csiro.au/NVCLDataServices/Display_Tray_Thumb.html");
+         URIBuilder builder = new URIBuilder(serviceUrl + "Display_Tray_Thumb.html");
          builder.setParameter("logid", boreholeId); //The access token I am getting after the Login
          builder.setParameter("sampleno", sampleNo);
          method.setURI(builder.build());

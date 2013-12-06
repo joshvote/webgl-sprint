@@ -17,8 +17,8 @@ Ext.define('webglsprint.Main', {
         var raycaster = new THREE.Raycaster();
 
         //Make our request for a lot of boreholes...
-        var maxBoreholes = 1000;
-        var boreholeId = undefined; //'boreholes.5271';
+        var maxBoreholes = 100;
+        var boreholeId = undefined;//'boreholes.5271';
         webglsprint.boreholes.Loader.getBoreholes(maxBoreholes, boreholeId, function(success, message, boreholes) {
             if (!success) {
                 alert('ERROR: ' + message);
@@ -57,12 +57,7 @@ Ext.define('webglsprint.Main', {
                 n : 0
             };
 
-
-            var material = new THREE.MeshLambertMaterial({
-            	needsUpdate: true,
-                map: THREE.ImageUtils.loadTexture('getBoreholesImage.do?logId=fae8f90d-2015-4200-908a-b30da787f01&depth=20')
-              });
-
+            var materialDict = {};
 
             //Iterate over our JSON representation of N boreholes
             for (i = 0; i < boreholes.length; ++i) {
@@ -79,6 +74,18 @@ Ext.define('webglsprint.Main', {
                     points.push(new THREE.Vector3(point.x, point.y, point.z));
                 }
 
+                //Lookup a texture based on borehole ID. If it DNE - load a new one
+                var nvclId = boreholes[i].nvclId;
+                var material = materialDict[nvclId];
+                if (!material) {
+                    var serviceUrl = boreholes[i].nvclDataUrl;
+                    material = new THREE.MeshLambertMaterial({
+                        needsUpdate: true,
+                        map: THREE.ImageUtils.loadTexture('getBoreholesImage.do?logId=' + nvclId + '&depth=20&serviceUrl=' + escape(serviceUrl))
+                    });
+                    materialDict[nvclId] = material;
+                }
+                
                 //The tube geometry will divide the points up into a set of n segments
                 //with a specified number of points on the radius.
                 var segments = Math.ceil(Math.log(points.length) / Math.LN2); //lets decimate according to an arbitrary scale
@@ -87,7 +94,6 @@ Ext.define('webglsprint.Main', {
 
                 var path = new THREE.SplineCurve3(points);
                 var geometry = new THREE.TubeGeometry(path, segments, 10, radius, false);
-                //var material = new THREE.MeshBasicMaterial( { color: Math.floor(Math.random()*16777215), wireframe: true} );
                 var tube = new THREE.Mesh(geometry, material);
                 tube.borehole = boreholes[i];
                 scene.add(tube);
