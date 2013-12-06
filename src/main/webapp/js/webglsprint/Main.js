@@ -26,7 +26,10 @@ Ext.define('webglsprint.Main', {
             }
 
             Ext.get('loading-text').remove();
-            alert('Rendering ' + boreholes.length + ' boreholes now.\nTo look around, hold down the mouse and drag. To move the camera, use WASD');
+            alert('Rendering ' + boreholes.length + ' boreholes now.'
+                    + '\nTo look around, hold down the mouse and drag.'
+                    + '\nTo move the camera, use the WASD keys.'
+                    + '\nTo query a borehole, use mouse right-click.');
             if (!boreholes.length) {
                 return;
             }
@@ -153,13 +156,14 @@ Ext.define('webglsprint.Main', {
             Ext.get('webgl-sprint-canvas').dom.addEventListener('mousedown', onMouseDown, false);
             function onMouseDown(event) {
                 if (event.button == 2) {
-                    var x = ( event.clientX / window.innerWidth ) * 2 - 1;
-                    var y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+                    var x = (event.clientX / window.innerWidth) * 2 - 1;
+                    var y = -(event.clientY / window.innerHeight) * 2 + 1;
                     var vector = new THREE.Vector3(x, y, 1);
                     projector.unprojectVector(vector, camera);
                     raycaster.set(camera.position, vector.sub(camera.position).normalize());
                     var intersects = raycaster.intersectObjects(scene.children);
-                    if ( intersects.length > 0 ) {
+                    if (intersects.length > 0) {
+                        // interactive cubes demo and testing suggests first is nearest
                         var bh = intersects[0].object.borehole;
                         Ext.create('Ext.window.Window', {
                             title: bh.name,

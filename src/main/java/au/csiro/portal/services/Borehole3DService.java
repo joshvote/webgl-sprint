@@ -6,7 +6,10 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Random;
 
 import javax.xml.namespace.NamespaceContext;
 import javax.xml.xpath.XPathConstants;
@@ -39,15 +42,39 @@ public class Borehole3DService extends BaseWFSService {
     private static final String ENDPOINT = "http://services-test.auscope.org/nvcl/wfs";
     private static final String FEATURE_TYPE = "demo:boreholes";
 
+    //To generate a fake 1-1 correspondence with these boreholes
+    private String[] fakeNvclIds;
+    private String[] fakeNvclWfsUris;
+    private String[] fakeNvclTitle;
+
+    
     @Autowired
     public Borehole3DService(HttpServiceCaller httpServiceCaller,
             WFSGetFeatureMethodMaker wfsMethodMaker) {
         super(httpServiceCaller, wfsMethodMaker);
+        
+        fakeNvclIds = new String[] {"6dd70215-fe38-457c-be42-3b165fd98c7",
+                "820faa0e-acda-42c1-8f1c-b18c13cd38c",
+                "218410be-7dba-4cce-bb71-b3fea7fe581",
+                "870d1927-e33c-4a2f-aef7-556c6fd0a8c"};
+        fakeNvclWfsUris = new String[] {"http://nvclwebservices.vm.csiro.au/resource/feature/CSIRO/borehole/WTB5",
+                "http://nvclwebservices.vm.csiro.au/resource/feature/CSIRO/borehole/GSDD006",
+                "http://nvclwebservices.vm.csiro.au/resource/feature/CSIRO/borehole/evil beu162",
+                "http://nvclwebservices.vm.csiro.au/resource/feature/CSIRO/borehole/GDDH7"};
+        fakeNvclTitle = new String[] {"WTB5",
+                "GSDD006",
+                "evil beu162",
+                "GDDH7"};
     }
+    
+    
 
     public List<Borehole> getBoreholes(String featureId, Integer maxFeatures) throws PortalServiceException {
         HttpRequestBase request = null;
         List<Borehole> boreholes = new ArrayList<Borehole>();
+        
+        Random nvclRandomIdGenerator = new Random();
+        
         try {
             request = this.generateWFSRequest(ENDPOINT, FEATURE_TYPE, featureId, null, maxFeatures, "http://www.opengis.net/gml/srs/epsg.xml#700001", ResultType.Results);
 
@@ -76,7 +103,15 @@ public class Borehole3DService extends BaseWFSService {
                                             Double.parseDouble(pointValues[(j * 3) + 2]));
                 }
 
-                boreholes.add(new Borehole(name, Double.parseDouble(depth), points));
+                
+                Borehole bh = new Borehole(name, Double.parseDouble(depth), points);
+                
+                int fakeNvclIndex = nvclRandomIdGenerator.nextInt(fakeNvclIds.length);
+                bh.setNvclId(fakeNvclIds[fakeNvclIndex]);
+                bh.setNvclFeatureUri(fakeNvclWfsUris[fakeNvclIndex]);
+                bh.setNvclName(fakeNvclTitle[fakeNvclIndex]);
+                
+                boreholes.add(bh);
             }
 
             return boreholes;
