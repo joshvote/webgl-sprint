@@ -79,6 +79,7 @@ Ext.define('webglsprint.Main', {
                 var geometry = new THREE.TubeGeometry(path, segments, 10, radius, false);
                 var material = new THREE.MeshBasicMaterial( { color: Math.floor(Math.random()*16777215), wireframe: true} );
                 var tube = new THREE.Mesh(geometry, material);
+                tube.borehole = boreholes[i];
                 scene.add(tube);
             }
             
@@ -124,10 +125,9 @@ Ext.define('webglsprint.Main', {
                 renderer.render( scene, camera );
             };
             
-            // mouse-right click
+            // mouse-right click handler
             Ext.get('webgl-sprint-canvas').dom.addEventListener('mousedown', onMouseDown, false);
             function onMouseDown(event) {
-                console.log('mouse down',  event.button, event.clientX, event.clientY);
                 if (event.button == 2) {
                     var x = ( event.clientX / window.innerWidth ) * 2 - 1;
                     var y = - ( event.clientY / window.innerHeight ) * 2 + 1;
@@ -136,16 +136,16 @@ Ext.define('webglsprint.Main', {
                     raycaster.set(camera.position, vector.sub(camera.position).normalize());
                     var intersects = raycaster.intersectObjects(scene.children);
                     if ( intersects.length > 0 ) {
-                        // intersects[0].object
+                        var bh = intersects[0].object.borehole;
                         Ext.create('Ext.window.Window', {
-                            title: 'Hello',
+                            title: bh.name,
                             height: 200,
                             width: 400,
                             layout: 'fit',
-                            items: {
-                                xtype: 'textfield',
-                                fieldLabel: '' + event.clientX + ' ' + event.clientY
-                            }
+                            items: [{
+                                xtype: 'panel',
+                                html:  '<ul><li>totalDepth: '+bh.totalDepth+'</li><li>points: '+bh.points.length+'</li></ul>'
+                            }]
                         }).show();
                     }
                 }
