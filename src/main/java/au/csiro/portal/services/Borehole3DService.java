@@ -43,9 +43,7 @@ public class Borehole3DService extends BaseWFSService {
     private static final String FEATURE_TYPE = "demo:boreholes";
 
     //To generate a fake 1-1 correspondence with these boreholes
-    private String[] fakeNvclIds;
-    private String[] fakeNvclWfsUris;
-    private String[] fakeNvclTitle;
+    private List<Map<String,String>> fakeNvclData;
 
     
     @Autowired
@@ -53,18 +51,35 @@ public class Borehole3DService extends BaseWFSService {
             WFSGetFeatureMethodMaker wfsMethodMaker) {
         super(httpServiceCaller, wfsMethodMaker);
         
-        fakeNvclIds = new String[] {"6dd70215-fe38-457c-be42-3b165fd98c7",
-                "820faa0e-acda-42c1-8f1c-b18c13cd38c",
-                "218410be-7dba-4cce-bb71-b3fea7fe581",
-                "870d1927-e33c-4a2f-aef7-556c6fd0a8c"};
-        fakeNvclWfsUris = new String[] {"http://nvclwebservices.vm.csiro.au/resource/feature/CSIRO/borehole/WTB5",
-                "http://nvclwebservices.vm.csiro.au/resource/feature/CSIRO/borehole/GSDD006",
-                "http://nvclwebservices.vm.csiro.au/resource/feature/CSIRO/borehole/evil beu162",
-                "http://nvclwebservices.vm.csiro.au/resource/feature/CSIRO/borehole/GDDH7"};
-        fakeNvclTitle = new String[] {"WTB5",
-                "GSDD006",
-                "evil beu162",
-                "GDDH7"};
+        fakeNvclData = new ArrayList<Map<String,String>>();
+        
+        HashMap<String, String> map = new HashMap<String, String>();
+        map.put("id", "870d1927-e33c-4a2f-aef7-556c6fd0a8c");
+        map.put("wfsUri", "http://nvclwebservices.vm.csiro.au/resource/feature/CSIRO/borehole/GDDH7");
+        map.put("name", "GDDH7");
+        map.put("dataserviceUrl", "http://nvclwebservices.vm.csiro.au/NVCLDataServices/");
+        fakeNvclData.add(map);
+        
+        map = new HashMap<String, String>();
+        map.put("id", "6dd70215-fe38-457c-be42-3b165fd98c7");
+        map.put("wfsUri", "http://nvclwebservices.vm.csiro.au/resource/feature/CSIRO/borehole/WTB5");
+        map.put("name", "WTB5");
+        map.put("dataserviceUrl", "http://nvclwebservices.vm.csiro.au/NVCLDataServices/");
+        fakeNvclData.add(map);
+        
+        map = new HashMap<String, String>();
+        map.put("id", "820faa0e-acda-42c1-8f1c-b18c13cd38c");
+        map.put("wfsUri", "http://nvclwebservices.vm.csiro.au/resource/feature/CSIRO/borehole/GSDD006");
+        map.put("name", "GSDD006");
+        map.put("dataserviceUrl", "http://nvclwebservices.vm.csiro.au/NVCLDataServices/");
+        fakeNvclData.add(map);
+        
+        map = new HashMap<String, String>();
+        map.put("id", "218410be-7dba-4cce-bb71-b3fea7fe581");
+        map.put("wfsUri", "http://nvclwebservices.vm.csiro.au/resource/feature/CSIRO/borehole/evil beu162");
+        map.put("name", "evil beu162");
+        map.put("dataserviceUrl", "http://nvclwebservices.vm.csiro.au/NVCLDataServices/");
+        fakeNvclData.add(map);
     }
     
     
@@ -106,10 +121,11 @@ public class Borehole3DService extends BaseWFSService {
                 
                 Borehole bh = new Borehole(name, Double.parseDouble(depth), points);
                 
-                int fakeNvclIndex = nvclRandomIdGenerator.nextInt(fakeNvclIds.length);
-                bh.setNvclId(fakeNvclIds[fakeNvclIndex]);
-                bh.setNvclFeatureUri(fakeNvclWfsUris[fakeNvclIndex]);
-                bh.setNvclName(fakeNvclTitle[fakeNvclIndex]);
+                int fakeNvclIndex = nvclRandomIdGenerator.nextInt(fakeNvclData.size());
+                bh.setNvclId(fakeNvclData.get(fakeNvclIndex).get("id"));
+                bh.setNvclFeatureUri(fakeNvclData.get(fakeNvclIndex).get("wfsUri"));
+                bh.setNvclName(fakeNvclData.get(fakeNvclIndex).get("name"));
+                bh.setNvclDataUrl(fakeNvclData.get(fakeNvclIndex).get("dataserviceUrl"));
                 
                 boreholes.add(bh);
             }

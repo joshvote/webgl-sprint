@@ -158,7 +158,10 @@ Ext.define('webglsprint.Main', {
                     if (intersects.length > 0) {
                         // interactive cubes demo and testing suggests first is nearest
                         var bh = intersects[0].object.borehole;
-                        Ext.create('Ext.window.Window', {
+                        
+                        webglsprint.boreholes.NVCLDetailsHandler.showDetailsWindow(bh.nvclId, bh.nvclName, bh.nvclDataUrl, "gsml.borehole." + bh.nvclName);
+                        
+                        /*Ext.create('Ext.window.Window', {
                             title: bh.name,
                             height: 200,
                             width: 400,
@@ -167,7 +170,7 @@ Ext.define('webglsprint.Main', {
                                 xtype: 'panel',
                                 html:  '<ul><li>totalDepth: '+bh.totalDepth+'</li><li>points: '+bh.points.length+'</li></ul>'
                             }]
-                        }).show();
+                        }).show();*/
                     }
                 }
             };

@@ -9,7 +9,7 @@
 
       <!-- link extjs 4 -->
       <link rel="stylesheet" type="text/css" href="js/ext-4.1.1a/resources/css/ext-all.css">
-      <script type="text/javascript" src="js/ext-4.1.1a/ext-all.js"></script>
+      <script type="text/javascript" src="js/ext-4.1.1a/ext-all-debug.js"></script>
       
       <!-- Link three.js -->
       <script type="text/javascript" src="js/threejs/three.min.js"></script>
@@ -17,6 +17,11 @@
       <script type="text/javascript" src="js/threejs/Stats.js"></script>
       
       <!-- Link webgl-sprint application -->
+      <script type="text/javascript" src="js/auscope/core/CellTips.js"></script>
+      <script type="text/javascript" src="js/auscope/knownlayer/nvcl/Dataset.js"></script>
+      <script type="text/javascript" src="js/auscope/knownlayer/nvcl/Log.js"></script>
+      <script type="text/javascript" src="js/webglsprint/boreholes/NVCLDetailsHandler.js"></script>
+      
       <script type="text/javascript" src="js/webglsprint/boreholes/Loader.js"></script>
       <script type="text/javascript" src="js/webglsprint/Main.js"></script>
       
