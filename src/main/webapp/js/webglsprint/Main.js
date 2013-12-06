@@ -13,6 +13,9 @@ Ext.define('webglsprint.Main', {
         stats.domElement.style.top = '0px';
         document.body.appendChild( stats.domElement );
         
+        var projector = new THREE.Projector();
+        var raycaster = new THREE.Raycaster();
+        
         //Make our request for a lot of boreholes...
         var maxBoreholes = 1000;
         var boreholeId = undefined; //'boreholes.5271';
@@ -126,18 +129,25 @@ Ext.define('webglsprint.Main', {
             function onMouseDown(event) {
                 console.log('mouse down',  event.button, event.clientX, event.clientY);
                 if (event.button == 2) {
-                    Ext.create('Ext.window.Window', {
-                        title: 'Hello',
-                        height: 200,
-                        width: 400,
-                        layout: 'fit',
-                        items: {  // Let's put an empty grid in just to illustrate fit layout
-                            xtype: 'grid',
-                            border: false,
-                            columns: [{header: 'World'}],                 // One header just for show. There's no data,
-                            store: Ext.create('Ext.data.ArrayStore', {}) // A dummy empty data store
-                        }
-                    }).show();
+                    var x = ( event.clientX / window.innerWidth ) * 2 - 1;
+                    var y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+                    var vector = new THREE.Vector3(x, y, 1);
+                    projector.unprojectVector(vector, camera);
+                    raycaster.set(camera.position, vector.sub(camera.position).normalize());
+                    var intersects = raycaster.intersectObjects(scene.children);
+                    if ( intersects.length > 0 ) {
+                        // intersects[0].object
+                        Ext.create('Ext.window.Window', {
+                            title: 'Hello',
+                            height: 200,
+                            width: 400,
+                            layout: 'fit',
+                            items: {
+                                xtype: 'textfield',
+                                fieldLabel: '' + event.clientX + ' ' + event.clientY
+                            }
+                        }).show();
+                    }
                 }
             };
         
