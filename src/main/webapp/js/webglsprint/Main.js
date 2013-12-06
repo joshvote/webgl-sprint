@@ -119,7 +119,28 @@ Ext.define('webglsprint.Main', {
                 camera.aspect = window.innerWidth / window.innerHeight;
                 renderer.setSize( window.innerWidth, window.innerHeight );
                 renderer.render( scene, camera );
-            }
+            };
+            
+            // mouse-right click
+            Ext.get('webgl-sprint-canvas').dom.addEventListener('mousedown', onMouseDown, false);
+            function onMouseDown(event) {
+                console.log('mouse down',  event.button, event.clientX, event.clientY);
+                if (event.button == 2) {
+                    Ext.create('Ext.window.Window', {
+                        title: 'Hello',
+                        height: 200,
+                        width: 400,
+                        layout: 'fit',
+                        items: {  // Let's put an empty grid in just to illustrate fit layout
+                            xtype: 'grid',
+                            border: false,
+                            columns: [{header: 'World'}],                 // One header just for show. There's no data,
+                            store: Ext.create('Ext.data.ArrayStore', {}) // A dummy empty data store
+                        }
+                    }).show();
+                }
+            };
+        
         });
     }
 });
