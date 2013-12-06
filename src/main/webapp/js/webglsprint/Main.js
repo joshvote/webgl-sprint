@@ -91,6 +91,14 @@ Ext.define('webglsprint.Main', {
                 var tube = new THREE.Mesh(geometry, material);
                 tube.borehole = boreholes[i];
                 scene.add(tube);
+
+                //VT: add capping to the ends of the borehole(I can't get the cap to fit nicely
+                var caps = new THREE.Mesh( new THREE.SphereGeometry(10), material );
+                caps.position.set( points[0].x, points[0].y, points[0].z );
+                caps.borehole=boreholes[i];
+				scene.add( caps );
+
+
             }
 
 
