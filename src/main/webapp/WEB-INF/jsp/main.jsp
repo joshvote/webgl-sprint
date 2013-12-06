@@ -17,6 +17,7 @@
       <script type="text/javascript" src="js/threejs/Stats.js"></script>
       
       <!-- Link webgl-sprint application -->
+      <script type="text/javascript" src="js/webglsprint/boreholes/Loader.js"></script>
       <script type="text/javascript" src="js/webglsprint/Main.js"></script>
       
       
