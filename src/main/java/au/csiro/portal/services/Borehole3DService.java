@@ -63,35 +63,40 @@ public class Borehole3DService extends BaseWFSService {
         fakeNvclData = new ArrayList<Map<String,String>>();
         
         HashMap<String, String> map = new HashMap<String, String>();
-        map.put("id", "3e2f3fd5-f1c6-464f-9d18-8e0c14be0d6");
+        map.put("id", "5be524cf-99c7-4306-824a-cefd56119be");
+        map.put("imageId", "3e2f3fd5-f1c6-464f-9d18-8e0c14be0d6");
         map.put("wfsUri", "http://geossdi.dmp.wa.gov.au/resource/feature/gswa/borehole/rdh01");
         map.put("name", "rdh01");
         map.put("dataserviceUrl", "http://geossdi.dmp.wa.gov.au/NVCLDataServices/");
         fakeNvclData.add(map);
         
         map = new HashMap<String, String>();
-        map.put("id", "c0a0f7ff-91d7-4ecc-a5dd-6d950ad1f51");
-        map.put("wfsUri", "http://geossdi.dmp.wa.gov.au/resource/feature/gswa/borehole/msd9");
-        map.put("name", "msd9");
-        map.put("dataserviceUrl", "http://geossdi.dmp.wa.gov.au/NVCLDataServices/");
-        fakeNvclData.add(map);
-        
-        map = new HashMap<String, String>();
-        map.put("id", "b2c6845f-9286-4fff-a16c-e6031779bc9");
+        map.put("id", "545679fc-e67a-4ebe-9a04-1c6aeb84f02");
+        map.put("imageId", "b2c6845f-9286-4fff-a16c-e6031779bc9");
         map.put("wfsUri", "http://geossdi.dmp.wa.gov.au/resource/feature/gswa/borehole/GSWADonnybrookDNB4");
         map.put("name", "GSWADonnybrookDNB4");
         map.put("dataserviceUrl", "http://geossdi.dmp.wa.gov.au/NVCLDataServices/");
         fakeNvclData.add(map);
         
         map = new HashMap<String, String>();
-        map.put("id", "7ec27575-c3fa-4ccf-873a-0641a6cd275");
+        map.put("id", "6feb401e-84a2-4541-8949-3681854d6b5");
+        map.put("imageId", "c0a0f7ff-91d7-4ecc-a5dd-6d950ad1f51");
+        map.put("wfsUri", "http://geossdi.dmp.wa.gov.au/resource/feature/gswa/borehole/msd9");
+        map.put("name", "msd9");
+        map.put("dataserviceUrl", "http://geossdi.dmp.wa.gov.au/NVCLDataServices/");
+        fakeNvclData.add(map);
+        
+        map = new HashMap<String, String>();
+        map.put("id", "4266aa64-b6ea-42e3-814e-40d1f83d383");
+        map.put("imageId", "7ec27575-c3fa-4ccf-873a-0641a6cd275");
         map.put("wfsUri", "http://geossdi.dmp.wa.gov.au/resource/feature/gswa/borehole/DX00");
         map.put("name", "dx00");
         map.put("dataserviceUrl", "http://geossdi.dmp.wa.gov.au/NVCLDataServices/");
         fakeNvclData.add(map);
         
         map = new HashMap<String, String>();
-        map.put("id", "fae8f90d-2015-4200-908a-b30da787f01");
+        map.put("id", "6dd70215-fe38-457c-be42-3b165fd98c7");
+        map.put("imageId", "fae8f90d-2015-4200-908a-b30da787f01");
         map.put("wfsUri", "http://nvclwebservices.vm.csiro.au/resource/feature/CSIRO/borehole/WTB5");
         map.put("name", "WTB5");
         map.put("dataserviceUrl", "http://nvclwebservices.vm.csiro.au/NVCLDataServices/");
@@ -144,7 +149,7 @@ public class Borehole3DService extends BaseWFSService {
                 bh.setNvclFeatureUri(fakeNvclData.get(fakeNvclIndex).get("wfsUri"));
                 bh.setNvclName(fakeNvclData.get(fakeNvclIndex).get("name"));
                 bh.setNvclDataUrl(fakeNvclData.get(fakeNvclIndex).get("dataserviceUrl"));
-                
+                bh.setNvclImageId(fakeNvclData.get(fakeNvclIndex).get("imageId"));
                 boreholes.add(bh);
             }
 

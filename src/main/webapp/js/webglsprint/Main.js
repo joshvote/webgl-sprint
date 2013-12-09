@@ -29,7 +29,9 @@ Ext.define('webglsprint.Main', {
             alert('Rendering ' + boreholes.length + ' boreholes now.'
                     + '\nTo look around, hold down the mouse and drag.'
                     + '\nTo move the camera, use the WASD keys.'
-                    + '\nTo query a borehole, use mouse right-click.');
+                    + '\nTo query a borehole, use mouse right-click.'
+                    + '\n'
+                    + '\nPlease Note: The textures loaded need to be requested at a very high resolution and require downsampling. The boreholes will initially render as black until the texture load completes.');
             if (!boreholes.length) {
                 return;
             }
@@ -47,6 +49,7 @@ Ext.define('webglsprint.Main', {
             var renderer = new THREE.WebGLRenderer({
                 canvas : Ext.get('webgl-sprint-canvas').dom
             });
+            renderer.setClearColor(0xaaaaaa);
 
             //We need to figure out the mean x,y,z values in order to point our camera
             //at something interesting
@@ -76,12 +79,13 @@ Ext.define('webglsprint.Main', {
 
                 //Lookup a texture based on borehole ID. If it DNE - load a new one
                 var nvclId = boreholes[i].nvclId;
+                var nvclImageId = boreholes[i].nvclImageId;
                 var material = materialDict[nvclId];
                 if (!material) {
                     var serviceUrl = boreholes[i].nvclDataUrl;
                     material = new THREE.MeshLambertMaterial({
                         needsUpdate: true,
-                        map: THREE.ImageUtils.loadTexture('getBoreholesImage.do?logId=' + nvclId + '&depth=20&serviceUrl=' + escape(serviceUrl))
+                        map: THREE.ImageUtils.loadTexture('getBoreholesImage.do?logId=' + nvclImageId + '&depth=20&serviceUrl=' + escape(serviceUrl))
                     });
                     materialDict[nvclId] = material;
                 }
@@ -120,7 +124,6 @@ Ext.define('webglsprint.Main', {
             var directionalLight = new THREE.DirectionalLight( 0xa0a0a0, 1 );
             directionalLight.position.set( 0, 1, 0 );
             scene.add( directionalLight );
-
 
             mean.x = mean.xTotal / mean.n;
             mean.y = mean.yTotal / mean.n;
@@ -179,17 +182,6 @@ Ext.define('webglsprint.Main', {
                         var bh = intersects[0].object.borehole;
 
                         webglsprint.boreholes.NVCLDetailsHandler.showDetailsWindow(bh.nvclId, bh.nvclName, bh.nvclDataUrl, "gsml.borehole." + bh.nvclName);
-
-                        /*Ext.create('Ext.window.Window', {
-                            title: bh.name,
-                            height: 200,
-                            width: 400,
-                            layout: 'fit',
-                            items: [{
-                                xtype: 'panel',
-                                html:  '<ul><li>totalDepth: '+bh.totalDepth+'</li><li>points: '+bh.points.length+'</li></ul>'
-                            }]
-                        }).show();*/
                     }
                 }
             };

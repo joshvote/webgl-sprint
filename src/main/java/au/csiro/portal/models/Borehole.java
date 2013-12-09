@@ -7,6 +7,7 @@ public class Borehole {
     private String nvclFeatureUri;
     private String nvclName;
     private String nvclId;
+    private String nvclImageId;
     private String nvclDataUrl;
     
     
@@ -58,8 +59,10 @@ public class Borehole {
     public void setNvclDataUrl(String nvclDataUrl) {
         this.nvclDataUrl = nvclDataUrl;
     }
-
-    
-    
-    
+    public String getNvclImageId() {
+        return nvclImageId;
+    }
+    public void setNvclImageId(String nvclImageId) {
+        this.nvclImageId = nvclImageId;
+    }
 }
